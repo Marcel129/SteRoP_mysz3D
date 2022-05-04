@@ -1,8 +1,12 @@
 #include <GL/glut.h>
 
 float angle = 0;
-float posx = 0;
-float posy = 0;
+float posx = 0, posz = 10;
+
+void drawCube() {
+	glColor3f(1, 0.5 , 0.5);
+	glutSolidCube(2);
+}
 
 void resizeMe(int w, int h)
 {
@@ -21,56 +25,78 @@ void renderMe(void) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//Set camera
 	glLoadIdentity();
 	gluLookAt(
-           0, 0, 10,
-           0, 0, 0,
+           0, 1, 4,
+           0, 1, 5,
            0, 1, 0);
-    glRotatef( angle, 0, 0, 1);
 
-	glBegin(GL_POLYGON);
-		glVertex3f(0 + posx, 2 + posy, 0);
-		glVertex3f( 1 + posx, -2 + posy, 0);
-		glVertex3f( -1 + posx, -2 + posy, 0);
+    //Draw Ground
+	glColor3f(0.9, 0.9, 0.9);
+	glBegin(GL_QUADS);
+		glVertex3f(-100, 0, -100);
+		glVertex3f(-100, 0,  100);
+		glVertex3f( 100, 0,  100);
+		glVertex3f( 100, 0, -100);
 	glEnd();
 
-	//angle += 1;
+	//Drow and move cube
+	glPushMatrix();
+    glTranslatef(posx, 1, posz);
+    glRotatef(angle, 0, 1, 0);
+    drawCube();
+    glPopMatrix();
 
 	glutSwapBuffers();
 }
 
 void processNormalKeys(unsigned char key, int x, int y)
 {
-    if(key == 'q')
-        angle++;
-    if(key == 'e')
-        angle--;
+    switch(key)
+    {
+    case 'a':
+        posx += 0.01;
+        break;
 
-    if(key == 'd')
-        posx += 0.1;
-    if(key == 'a')
-        posx -= 0.1;
+    case 'd':
+        posx -= 0.01;
+        break;
 
-    if(key == 'w')
-        posy += 0.1;
-    if(key == 's')
-        posy -= 0.1;
+    case 'w':
+        posz += 0.01;
+        break;
+
+    case 's':
+        posz -= 0.01;
+        break;
+
+    case 'q':
+        angle += 0.5;
+        break;
+
+    case 'e':
+        angle -= 0.5;
+        break;
+    }
+
 }
 
 int main(int argc, char **argv) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowPosition(100, 100);
+	glutInitWindowPosition(800, 200);
 	glutInitWindowSize(700, 700);
-	glutCreateWindow("GLUT Tutorial");
+	glutCreateWindow("SR App");
 
 	glutDisplayFunc(renderMe);
 	glutReshapeFunc(resizeMe);
-
 	glutIdleFunc(renderMe);
 
 	glutKeyboardFunc(processNormalKeys);
+
+	glEnable(GL_DEPTH_TEST);
 
 	glutMainLoop();
 
