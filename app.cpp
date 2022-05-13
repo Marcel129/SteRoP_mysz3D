@@ -3,26 +3,9 @@
 
 float anglex = 0, angley = 0, anglez = 0;
 float posx = 0, posz = 1, posy = 10;
-static int val_tr = 1;
-static int val_rot = 1;
-
-void drawCube() {
-	glColor3f(1, 0.5 , 0.5);
-	glutSolidCube(2);
-}
-
-void resizeMe(int w, int h)
-{
-	if (h == 0)
-		h = 1;
-	float ratio =  w * 1.0 / h;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glViewport(0, 0, w, h);
-	gluPerspective(45 ,ratio, 0.1, 100);
-	glMatrixMode(GL_MODELVIEW);
-}
+int val_tr = 1;
+int val_rot = 1;
+int coord = 1;
 
 void drawText(const char *string, int length, int x, int y)
 {
@@ -44,6 +27,43 @@ void drawText(const char *string, int length, int x, int y)
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixd(matrix);
     glMatrixMode(GL_MODELVIEW);
+}
+
+void drawCube() {
+	glColor3f(1, 0.5 , 0.5);
+	glutSolidCube(2);
+}
+
+void drawCoord()
+{
+    glColor3f(1, 0, 0); // red x
+    glBegin(GL_LINES);
+        glVertex3f(0, 0, 0);
+        glVertex3f(2, 0, 0);
+
+        glVertex3f(2, 0, 0);
+        glVertex3f(1.85, 0.075, 0);
+
+        glVertex3f(2, 0, 0);
+        glVertex3f(1.85, -0.075, 0);
+    glEnd();
+    glFlush();
+
+    glRasterPos3f(1.95, 0.15, 0);
+    glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (const unsigned char*)"x");
+}
+
+void resizeMe(int w, int h)
+{
+	if (h == 0)
+		h = 1;
+	float ratio =  w * 1.0 / h;
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glViewport(0, 0, w, h);
+	gluPerspective(45 ,ratio, 0.1, 100);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void draw_info()
@@ -124,42 +144,6 @@ void draw_info()
             drawText(drText, 7, textx, texty - 20*(i + 1));
         }
     }
-    /*
-    float drawx = abs(posx);
-    float drawy = abs(posy);
-    char c1[8], c2[8];
-    c1[0] = 'x';
-    c1[1] = ':';
-    if(posx < 0)
-        c1[2] = '-';
-    else
-        c1[2] = ' ';
-    c1[3] = (int)drawx%10 + '0';
-    c1[4] = ',';
-    c1[5] = (int)(drawx*10)%10 + '0';
-    c1[6] = (int)(drawx*100)%10 + '0';
-    c1[7] = '\0';
-
-    c2[0] = 'y';
-    c2[1] = ':';
-    c2[2] = (int)(drawy/10)%10 + '0';
-    c2[3] = (int)drawy%10 + '0';
-    c2[4] = ',';
-    c2[5] = (int)(drawy*10)%10 + '0';
-    c2[6] = (int)(drawy*100)%10 + '0';
-    c2[7] = '\0';
-    */
-
-    /*
-    if(val_tr == 1)
-    {
-        drawText("Trans", 5, 0, 580);
-    }
-    if(val_rot == 1)
-    {
-        drawText("Rot", 3, 0, 560);
-    }
-    */
 }
 
 void renderMe(void) {
@@ -185,11 +169,19 @@ void renderMe(void) {
 	//Draw and move cube
 	glPushMatrix();
     glTranslatef(posx, posz, posy);
+    drawCoord();
     glRotatef(anglez, 0, 1, 0);
     glRotatef(angley, 1, 0, 0);
     glRotatef(anglex, 0, 0, 1);
     drawCube();
     glPopMatrix();
+
+    /*
+    glPushMatrix();
+    glTranslatef(posx, posz, posy);
+    drawCoord();
+    glPopMatrix();
+    */
 
     draw_info();
 
