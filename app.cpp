@@ -36,7 +36,8 @@ void drawCube() {
 
 void drawCoord()
 {
-    glColor3f(1, 0, 0); // red x
+    //x axis
+    glColor3f(1, 0, 0); //red
     glBegin(GL_LINES);
         glVertex3f(0, 0, 0);
         glVertex3f(2, 0, 0);
@@ -51,6 +52,40 @@ void drawCoord()
 
     glRasterPos3f(1.95, 0.15, 0);
     glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (const unsigned char*)"x");
+
+    //y axis
+    glColor3f(0, 1, 0); //green
+    glBegin(GL_LINES);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, 0, -2);
+
+        glVertex3f(0, 0, -2);
+        glVertex3f(0, 0.075, -1.85);
+
+        glVertex3f(0, 0, -2);
+        glVertex3f(0, -0.075, -1.85);
+    glEnd();
+    glFlush();
+
+    glRasterPos3f(0, 0.15, -1.95);
+    glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (const unsigned char*)"y");
+
+    //z axis
+    glColor3f(0, 0, 1); //blue
+    glBegin(GL_LINES);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, 2, 0);
+
+        glVertex3f(0, 2, 0);
+        glVertex3f(0.075, 1.85, 0);
+
+        glVertex3f(0, 2, 0);
+        glVertex3f(-0.075, 1.85, 0);
+    glEnd();
+    glFlush();
+
+    glRasterPos3f(0.15, 1.95, 0);
+    glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (const unsigned char*)"z");
 }
 
 void resizeMe(int w, int h)
@@ -169,19 +204,13 @@ void renderMe(void) {
 	//Draw and move cube
 	glPushMatrix();
     glTranslatef(posx, posz, posy);
-    drawCoord();
+    if(coord == 1)
+        drawCoord();
     glRotatef(anglez, 0, 1, 0);
     glRotatef(angley, 1, 0, 0);
     glRotatef(anglex, 0, 0, 1);
     drawCube();
     glPopMatrix();
-
-    /*
-    glPushMatrix();
-    glTranslatef(posx, posz, posy);
-    drawCoord();
-    glPopMatrix();
-    */
 
     draw_info();
 
@@ -219,7 +248,33 @@ void processNormalKeys(unsigned char key, int x, int y)
 
 }
 
-void menu(int value){
+void menu(int value)
+{
+    switch (value)
+    {
+    case 0:
+        exit(0);
+        break;
+    case 1:
+        val_tr = 1;
+        break;
+    case 2:
+        val_tr = 0;
+        break;
+    case 3:
+        val_rot = 1;
+        break;
+    case 4:
+        val_rot = 0;
+        break;
+    case 5:
+        coord = 1;
+        break;
+    case 6:
+        coord = 0;
+        break;
+    }
+    /*
 	if(value == 0)
     {
 		exit(0);
@@ -228,6 +283,7 @@ void menu(int value){
     {
 		val_tr = value;
 	}
+	*/
 }
 void menu2(int value){
 	val_rot = value;
@@ -235,23 +291,30 @@ void menu2(int value){
 
 void createMenu()
 {
-    static int show_tr;
-    static int show_rot;
+    int show_tr;
+    int show_rot;
+    int show_coord;
 
     show_tr = glutCreateMenu(menu);
 
 	glutAddMenuEntry("Show", 1);
 	glutAddMenuEntry("Hide", 2);
 
-	show_rot = glutCreateMenu(menu2);
+	show_rot = glutCreateMenu(menu);
 
-	glutAddMenuEntry("Show", 1);
-	glutAddMenuEntry("Hide", 2);
+	glutAddMenuEntry("Show", 3);
+	glutAddMenuEntry("Hide", 4);
+
+	show_coord = glutCreateMenu(menu);
+
+	glutAddMenuEntry("Show", 5);
+	glutAddMenuEntry("Hide", 6);
 
 	glutCreateMenu(menu);
 
-	glutAddSubMenu("Cube TRanslation", show_tr);
+	glutAddSubMenu("Cube Translation", show_tr);
 	glutAddSubMenu("Cube Rotation", show_rot);
+	glutAddSubMenu("Coordinate System", show_coord);
 
 	glutAddMenuEntry("Exit", 0);
 
