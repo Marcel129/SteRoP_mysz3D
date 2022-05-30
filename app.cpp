@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <GL/freeglut.h>
 
-float anglex = 0, angley = 0, anglez = 0;
+float anglex = -20, angley = 0, anglez = 0;
 float posx = 0, posz = 1, posy = 10;
 int val_tr = 1;
 int val_rot = 1;
@@ -30,8 +30,60 @@ void drawText(const char *string, int length, int x, int y)
 }
 
 void drawCube() {
-	glColor3f(1, 0.5 , 0.5);
-	glutSolidCube(2);
+    //Face
+	glColor3f(1, 0.5, 0.5);
+	glBegin(GL_POLYGON);
+        glVertex3f(-1, -1, -1);
+        glVertex3f(1, -1, -1);
+        glVertex3f(1, 1, -1);
+        glVertex3f(-1, 1, -1);
+	glEnd();
+
+	//Left
+	glColor3f(0.5, 0.5, 1);
+	glBegin(GL_POLYGON);
+        glVertex3f(1, -1, 1);
+        glVertex3f(1, -1, -1);
+        glVertex3f(1, 1, -1);
+        glVertex3f(1, 1, 1);
+	glEnd();
+
+	//Right
+	glColor3f(0.5, 1, 0.5);
+	glBegin(GL_POLYGON);
+        glVertex3f(-1, -1, 1);
+        glVertex3f(-1, -1, -1);
+        glVertex3f(-1, 1, -1);
+        glVertex3f(-1, 1, 1);
+	glEnd();
+
+	//Back
+    glColor3f(1, 1, 0.5);
+	glBegin(GL_POLYGON);
+        glVertex3f(-1, -1, 1);
+        glVertex3f(1, -1, 1);
+        glVertex3f(1, 1, 1);
+        glVertex3f(-1, 1, 1);
+	glEnd();
+
+	//Top
+    glColor3f(1, 0.5, 1);
+	glBegin(GL_POLYGON);
+        glVertex3f(-1, 1, 1);
+        glVertex3f(1, 1, 1);
+        glVertex3f(1, 1, -1);
+        glVertex3f(-1, 1, -1);
+	glEnd();
+
+	//Down
+	glColor3f(0.5, 1, 1);
+	glBegin(GL_POLYGON);
+        glVertex3f(-1, -1, 1);
+        glVertex3f(1, -1, 1);
+        glVertex3f(1, -1, -1);
+        glVertex3f(-1, -1, -1);
+	glEnd();
+
 }
 
 void drawCoord()
@@ -203,12 +255,12 @@ void renderMe(void) {
 
 	//Draw and move cube
 	glPushMatrix();
-    glTranslatef(posx, posz, posy);
+	glTranslatef(posx, posz, posy);
     if(coord == 1)
         drawCoord();
     glRotatef(anglez, 0, 1, 0);
-    glRotatef(angley, 1, 0, 0);
-    glRotatef(anglex, 0, 0, 1);
+    glRotatef(angley, 0, 0, 1);
+    glRotatef(anglex, 1, 0, 0);
     drawCube();
     glPopMatrix();
 
@@ -274,19 +326,6 @@ void menu(int value)
         coord = 0;
         break;
     }
-    /*
-	if(value == 0)
-    {
-		exit(0);
-	}
-	else
-    {
-		val_tr = value;
-	}
-	*/
-}
-void menu2(int value){
-	val_rot = value;
 }
 
 void createMenu()
