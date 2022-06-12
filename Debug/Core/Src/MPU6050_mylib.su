@@ -1,0 +1,6 @@
+MPU6050_mylib.c:3:8:MPU6050_init	32	static
+MPU6050_mylib.c:16:7:MPU6050_acc_mes	56	static
+MPU6050_mylib.c:39:7:MPU6050_gyro_mes	40	static
+MPU6050_mylib.c:60:6:MPU6050_measure	48	static
+MPU6050_mylib.c:93:6:MPU6050_print_data	40	static
+MPU6050_mylib.c:98:6:MPU6050_print_raw_data	88	static
