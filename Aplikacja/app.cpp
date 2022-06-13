@@ -269,9 +269,11 @@ void renderMe(void) {
 
 	glutSwapBuffers();
 
+	/*
 	std::cin >> posx >> posy >> posz >> anglex >> angley >> anglez;
 	posy += 10;
 	posz += 1;
+	*/
 }
 
 void processNormalKeys(unsigned char key, int x, int y)
