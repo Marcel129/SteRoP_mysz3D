@@ -21,7 +21,7 @@
 #define GYRO_Z_ERROR -0.72
 
 #define BUFF_SIZE 35
-#define MEASUREMENT_TIME 55//time between 2 measurements in ms
+#define MEASUREMENT_TIME 100//time between 2 measurements in ms
 
 struct MPU6050_data
 {
