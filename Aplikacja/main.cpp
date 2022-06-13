@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 #include <GL/freeglut.h>
 #include <iostream>
+#include "app_bck.hh"
 
 float anglex = 0, angley = 0, anglez = 0;
 float posx = 0, posz = 1, posy = 10;
@@ -235,6 +236,39 @@ void draw_info()
 }
 
 void renderMe(void) {
+
+    static mouse m;
+    static bool isInitialized = false;
+
+    MPU6050_data data;
+    static MPU6050_data act_pos;
+
+    if(!isInitialized){
+        if (m.connect_mouse() != 0)
+        {
+            std::cerr << "Blad polaczenia z urzadzeniem" << std::endl;
+            while (1)
+            {
+            };
+        }
+        else
+        {
+            std::cerr << "Nawiazano polaczenie z urzadzeniem" << std::endl;
+            isInitialized = true;
+        }
+        act_pos=0;
+    }
+
+    if(isInitialized){
+        data = m.getMeasure() - m.getError();
+        act_pos += data/(100*100);
+        anglex = act_pos.gyro_y*180.0;
+        angley = act_pos.gyro_x*180.0;
+        anglez = act_pos.gyro_z*180.0;
+
+   Sleep(10);
+
+    }
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

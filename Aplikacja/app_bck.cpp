@@ -178,6 +178,19 @@ MPU6050_data &MPU6050_data::operator=(const float a)
     return *this;
 }
 
+MPU6050_data &MPU6050_data::operator=(const int a)
+{
+
+    this->acc_x = (float)a;
+    this->acc_y = (float)a;
+    this->acc_z = (float)a;
+    this->gyro_x = (float)a;
+    this->gyro_y = (float)a;
+    this->gyro_z = (float)a;
+
+    return *this;
+}
+
 void MPU6050_data::cutError(float err)
 {
     if (abs(this->acc_x) < err)

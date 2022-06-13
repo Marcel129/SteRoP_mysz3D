@@ -34,6 +34,7 @@ struct MPU6050_data
     MPU6050_data operator/(const float &sd2);
     MPU6050_data &operator+=(const MPU6050_data &sd2);
     MPU6050_data &operator=(const float a);
+    MPU6050_data &operator=(const int a);
     void cutError(float err);
     void convertData(char *rawData);
 };
@@ -42,7 +43,7 @@ struct MPU6050_data
 
 class mouse{
     HANDLE hSerial;
-    
+
     MPU6050_data error;
     unsigned int freq;
 

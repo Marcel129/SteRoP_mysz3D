@@ -127,24 +127,24 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  for(int i=0;i<mes_count;i++){
-		  MPU6050_measure(&tmp_data);
-		  sensor_data.acc_x += tmp_data.acc_x;
-		  sensor_data.acc_y += tmp_data.acc_y;
-		  sensor_data.acc_z += tmp_data.acc_z;
-		  sensor_data.gyro_x += tmp_data.gyro_x;
-		  sensor_data.gyro_y += tmp_data.gyro_y;
-		  sensor_data.gyro_z += tmp_data.gyro_z;
-		  HAL_Delay(5);
-	  }
-	  	  	  sensor_data.acc_x /= (float)mes_count;
-	  		  sensor_data.acc_y /= (float)mes_count;
-	  		  sensor_data.acc_z /= (float)mes_count;
-	  		  sensor_data.gyro_x /= (float)mes_count;
-	  		  sensor_data.gyro_y /= (float)mes_count;
-	  		  sensor_data.gyro_z /= (float)mes_count;
+//	  for(int i=0;i<mes_count;i++){
+		  MPU6050_measure(&sensor_data);
+//		  sensor_data.acc_x += tmp_data.acc_x;
+//		  sensor_data.acc_y += tmp_data.acc_y;
+//		  sensor_data.acc_z += tmp_data.acc_z;
+//		  sensor_data.gyro_x += tmp_data.gyro_x;
+//		  sensor_data.gyro_y += tmp_data.gyro_y;
+//		  sensor_data.gyro_z += tmp_data.gyro_z;
+//		  HAL_Delay(5);
+//	  }
+//	  	  	  sensor_data.acc_x /= (float)mes_count;
+//	  		  sensor_data.acc_y /= (float)mes_count;
+//	  		  sensor_data.acc_z /= (float)mes_count;
+//	  		  sensor_data.gyro_x /= (float)mes_count;
+//	  		  sensor_data.gyro_y /= (float)mes_count;
+//	  		  sensor_data.gyro_z /= (float)mes_count;
 
-			MessageLength = sprintf(DataToSend, "X:%0.2f Y:%0.2f Z:%0.2f X:%0.2f Y:%0.2f Z:%0.2f \n\r", sensor_data.acc_x,sensor_data.acc_y,sensor_data.acc_z,sensor_data.gyro_x,sensor_data.gyro_y,sensor_data.gyro_z);
+			MessageLength = sprintf(DataToSend, "%0.2f %0.2f %0.2f %0.2f %0.2f %0.2f \n\r", sensor_data.acc_x,sensor_data.acc_y,sensor_data.acc_z,sensor_data.gyro_x,sensor_data.gyro_y,sensor_data.gyro_z);
 
 			CDC_Transmit_FS(DataToSend, MessageLength);
 
@@ -154,6 +154,8 @@ int main(void)
 			  sensor_data.gyro_x = 0;
 			  sensor_data.gyro_y = 0;
 			  sensor_data.gyro_z = 0;
+
+			  HAL_Delay(10);
 
 
     /* USER CODE END WHILE */
