@@ -28,10 +28,6 @@
 /* USER CODE BEGIN Includes */
 
 #include "MPU6050_mylib.h"
-//#include "usbd_cdc_if.h" // Plik bedacy interfejsem uzytkownika do kontrolera USB
-#define UART_BUFF_SIZE 20
-#define MIN_FREQ_VAL 1
-#define MAX_FREQ_VAL 100
 
 /* USER CODE END Includes */
 
@@ -63,46 +59,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-//funkcja nadpisująca _write, umozliwia korzystanie z fukcji printf do komunikacji przez UART z komputerem
-//int _write(int file, char *ptr, int len)
-//{
-//	  HAL_UART_Transmit(&huart2 , ptr , len , 50 ) ;
-//
-//	return len;
-//}
-//
-//
-//volatile uint8_t uart_rx_buffer, finishDataReading = 0;
-//uint8_t buffer[UART_BUFF_SIZE+1];
-//int lineLength = 0;
-//
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-//{
-//  if (huart == &huart2) {
-//	//if(buffer[lineLength]=='X' && buffer[lineLength+1]=='X') finishDataReading = 1;
-//	if(uart_rx_buffer == 'w'){
-//		HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
-//	}
-//	else if(uart_rx_buffer == 'e'){
-//		HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
-//	}
-//	HAL_UART_Receive_IT(&huart2, &uart_rx_buffer, 1);
-//	buffer[lineLength] = uart_rx_buffer;
-//
-//	if(buffer[lineLength]=='\n'){
-//		finishDataReading=1;
-//	}
-//	lineLength++;
-//  }
-//}
-
-uint8_t ReceivedData[40], message[40] = "Send measure\n"; // Tablica przechowujaca odebrane dane
-uint8_t ReceivedDataFlag = 0; // Flaga informujaca o odebraniu danych
-
-uint64_t RxpipeAddrs = 0x11223344AA;
-char myRxData[50];
-char myAckPayload[32] = "Ack by STMF7!";
 
 /* USER CODE END 0 */
 
@@ -159,20 +115,18 @@ int main(void)
 
 
   //inicjalizacja czujnika MPU6050
-  MPU6050_init();
+  if(MPU6050_init()!=0){
+	  while(1){
+		  HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+		  HAL_Delay(500);
+	  }
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
-
-//	if(ReceivedDataFlag == 1){
-//
-//		ReceivedDataFlag = 0;
-//
-//		if(*ReceivedData == *message) {
 	  for(int i=0;i<mes_count;i++){
 		  MPU6050_measure(&tmp_data);
 		  sensor_data.acc_x += tmp_data.acc_x;
@@ -190,7 +144,7 @@ int main(void)
 	  		  sensor_data.gyro_y /= (float)mes_count;
 	  		  sensor_data.gyro_z /= (float)mes_count;
 
-			MessageLength = sprintf(DataToSend, "%0.2f %0.2f %0.2f %0.2f %0.2f %0.2f \n\r", sensor_data.acc_x,sensor_data.acc_y,sensor_data.acc_z,sensor_data.gyro_x,sensor_data.gyro_y,sensor_data.gyro_z);
+			MessageLength = sprintf(DataToSend, "X:%0.2f Y:%0.2f Z:%0.2f X:%0.2f Y:%0.2f Z:%0.2f \n\r", sensor_data.acc_x,sensor_data.acc_y,sensor_data.acc_z,sensor_data.gyro_x,sensor_data.gyro_y,sensor_data.gyro_z);
 
 			CDC_Transmit_FS(DataToSend, MessageLength);
 
@@ -200,14 +154,6 @@ int main(void)
 			  sensor_data.gyro_x = 0;
 			  sensor_data.gyro_y = 0;
 			  sensor_data.gyro_z = 0;
-//		}
-//
-//		// Wyczyszczenie tablicy odebranych danych
-//		uint8_t iter;
-//		for(iter = 0; iter<40; ++iter){
-//			ReceivedData[iter] = 0;
-//		}
-//	}
 
 
     /* USER CODE END WHILE */
