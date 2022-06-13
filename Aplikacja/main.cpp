@@ -1,7 +1,8 @@
 #include <GL/glut.h>
 #include <GL/freeglut.h>
+#include <iostream>
 
-float anglex = -20, angley = 0, anglez = 0;
+float anglex = 0, angley = 0, anglez = 0;
 float posx = 0, posz = 1, posy = 10;
 int val_tr = 1;
 int val_rot = 1;
@@ -267,6 +268,12 @@ void renderMe(void) {
     draw_info();
 
 	glutSwapBuffers();
+
+	/*
+	std::cin >> posx >> posy >> posz >> anglex >> angley >> anglez;
+	posy += 10;
+	posz += 1;
+	*/
 }
 
 void processNormalKeys(unsigned char key, int x, int y)
